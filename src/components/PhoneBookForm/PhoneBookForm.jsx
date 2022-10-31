@@ -1,15 +1,27 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
-import { Button, Form } from './PhoneBookForm.styled';
-import InputName from '../InputName/InputName';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+
+
+import InputName from '../UI/InputName/InputName';
+import { getEditedContact } from 'redux/contacts/contactsSelectors';
+
+import { Form } from '../PhoneBookForm/PhoneBookForm.styled';
+import { Button } from 'components/ContactsList/ContactList.styled';
 
 const PhoneBookForm = ({ onInputContact }) => {
+  const editedContact = useSelector(getEditedContact);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
 
+  const reset = () => {
+    setName('');
+    setPhone('');
+  };
   const handleSubmit = e => {
     e.preventDefault();
-    onInputContact({ name, phone });
+    onInputContact({ name, number: phone });
+    reset();
   };
 
   const handleChange = evt => {
@@ -19,6 +31,10 @@ const PhoneBookForm = ({ onInputContact }) => {
       setPhone(evt.target.value);
     }
   };
+  useEffect(() => {
+    editedContact && setName(editedContact.name);
+    editedContact && setPhone(editedContact.number);
+  }, [editedContact]);
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -42,7 +58,11 @@ const PhoneBookForm = ({ onInputContact }) => {
         value={phone}
         handleChange={handleChange}
       />
-      <Button type="submit">Add Contact</Button>
+      {editedContact ? (
+        <Button type="submit">Edit Contact</Button>
+      ) : (
+        <Button type="submit">Add Contact</Button>
+      )}
     </Form>
   );
 };

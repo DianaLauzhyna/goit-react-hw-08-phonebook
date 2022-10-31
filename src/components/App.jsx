@@ -1,68 +1,52 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import PhoneBookForm from './PhoneBookForm/PhoneBookForm';
-import ContactsList from './ContactsList/ContactsList';
-import {Section, SectionHeader} from './Section/Section';
-import InputSearch from './InputSearch/InputSearch';
-import { getContacts, getFilter } from 'redux/selectors';
-import { Wrapper } from './App.styled';
-import {
-  fetchTasks,
-  deleteContact,
-  addContact,
-  findByName,
-} from 'redux/operation';
-import { Loader } from './Loader/Loader';
-export const App = () => {
-  const { items: contacts, isLoading, error } = useSelector(getContacts);
-  const filter = useSelector(getFilter);
-  const dispatch = useDispatch();
+import { lazy, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { Route, Routes } from 'react-router-dom';
 
+import { refreshUser } from 'redux/auth/authThunk';
+
+import PrivateRoute from './PrivateRoute/PrivateRoute';
+import RestrictedRoute from './RestrictedRoute/RestrictedRoute';
+import Layout from './Layout/Layout';
+
+const SignInSide = lazy(() => import('../pages/Auth'));
+const SignUp = lazy(() => import('./SignUp/SignUp'));
+const HomePage = lazy(() => import('pages/Home'));
+
+export const App = () => {
+  const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(fetchTasks());
+    dispatch(refreshUser());
   }, [dispatch]);
 
-  const onInputContact = user => {
-    if (contacts.some(contact => contact.name === user.name)) {
-      return alert(`${user.name} is already in contacts.`);
-    }
-    dispatch(addContact(user));
-  };
-
-  const findByNameFilter = value => {
-    const name = value.trim().toLocaleLowerCase();
-    dispatch(findByName(name));
-  };
-  const onClickDelete = id => {
-    dispatch(deleteContact(id));
-  };
   return (
-    <Wrapper>
-      <Section title="PhoneBook">
-        <PhoneBookForm onInputContact={onInputContact} />
-      </Section>
+    <>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route
+            path="/phonebook"
+            element={
+              <PrivateRoute redirectTo="/signIn" component={<HomePage />} />
+            }
+          />
 
-      <SectionHeader title="Contacts"/>
-        <InputSearch
-          nameSearch="Find contacts by name"
-          onSearchName={findByNameFilter}
-        />
-        <div
-          style={{
-            width: 'fit-content',
-            margin: ' 0 auto',
-            position: 'absolute',
-            top: '10px',
-            right: '10px',
-          }}
-        >
-          {isLoading && <Loader />}
-        </div>
-        <p>{error}</p>
-        <ContactsList
-          onClickDelete={onClickDelete}
-          contacts={filter === '' ? contacts : filter}
-        />
-    </Wrapper>
+          <Route
+            path="/signIn"
+            element={
+              <RestrictedRoute
+                redirectTo="/phonebook"
+                component={<SignInSide />}
+              />
+            }
+          />
+          <Route
+            path="/signUp"
+            element={
+              <RestrictedRoute redirectTo="/phonebook" component={<SignUp />} />
+            }
+          />
+          <Route path="*" element={<div>NotFound</div>} />
+        </Route>
+      </Routes>
+    </>
   );
 };

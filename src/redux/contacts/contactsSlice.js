@@ -1,5 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchTasks, deleteContact, addContact, findByName } from './operation';
+import {
+  fetchTasks,
+  deleteContact,
+  addContact,
+  updateContact,
+} from './contactsThunk';
 
 const pendingHandler = (state, action) => {
   state.contacts.isLoading = true;
@@ -15,6 +20,15 @@ const contactsSlice = createSlice({
   initialState: {
     contacts: { items: [], isLoading: false, error: null },
     filter: '',
+    editedContact: null,
+  },
+  reducers: {
+    findByName(state, action) {
+      state.filter = action.payload;
+    },
+    editContact(state, action) {
+      state.editedContact = action.payload;
+    },
   },
   extraReducers: {
     [fetchTasks.pending]: pendingHandler,
@@ -23,12 +37,15 @@ const contactsSlice = createSlice({
     [deleteContact.rejected]: rejectedHandler,
     [addContact.pending]: pendingHandler,
     [addContact.rejected]: rejectedHandler,
-    [findByName.pending]: pendingHandler,
-    [findByName.rejected]: rejectedHandler,
-    [findByName.fulfilled](state, action) {
+    [updateContact.pending]: pendingHandler,
+    [updateContact.rejected]: rejectedHandler,
+    [updateContact.fulfilled](state, action) {
       state.contacts.isLoading = false;
       state.contacts.error = null;
-      state.filter = action.payload;
+      state.editedContact = null;
+      state.contacts.items = state.contacts.items.map(el =>
+        el.id === action.payload.id ? (el = action.payload) : el
+      );
     },
     [addContact.fulfilled](state, action) {
       state.contacts.isLoading = false;
@@ -43,12 +60,11 @@ const contactsSlice = createSlice({
     [deleteContact.fulfilled](state, action) {
       state.contacts.isLoading = false;
       state.contacts.error = null;
-      const i = state.contacts.items.findIndex(
-        el => el.id === action.payload.id
+      state.contacts.items = state.contacts.items.filter(
+        el => el.id !== action.payload
       );
-      state.contacts.items.splice(i, 1);
     },
   },
 });
-
+export const { findByName, editContact } = contactsSlice.actions;
 export const contactsReducer = contactsSlice.reducer;

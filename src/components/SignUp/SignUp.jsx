@@ -27,7 +27,7 @@ function Copyright(props) {
       {...props}
     >
       {'Copyright © '}
-      <Link color="inherit" href="https://github.com/MaksymenkoMaksym/">
+      <Link color="inherit" href="https://github.com/DianaLauzhyna">
         Git Hub
       </Link>{' '}
       {new Date().getFullYear()}
@@ -135,7 +135,7 @@ export default function SignUp() {
                       inputProps={{ 'aria-label': 'controlled' }}
                     />
                   }
-                  label="I am not support war in Ukraine"
+                  label="I don't support war in Ukraine"
                 />
               </Grid>
             </Grid>

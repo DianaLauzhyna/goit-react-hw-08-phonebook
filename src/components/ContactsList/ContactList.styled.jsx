@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 
 export const Button = styled.button`
   padding: 5px;
-  background-color: hotpink;
+  background-color: #7B68EE;
   font-size: 15px;
   border-radius: 4px;
   color: black;

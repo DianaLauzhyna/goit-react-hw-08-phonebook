@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { Suspense } from 'react';
 
-import { Navigation } from 'components/Navigation/Navigation';
+import { Navigation } from '../Navigation/Navigation';
 
 import {Main} from '../../pages/MainBox/MainBox';
 

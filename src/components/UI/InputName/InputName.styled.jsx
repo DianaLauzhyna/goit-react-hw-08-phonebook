@@ -12,7 +12,7 @@ export const Span = styled.span`
 `;
 
 export const Input = styled.input`
-  background-color: #d160a7b8;
+  background-color: #FFC0CB;
   color: black;
   display: block;
   width: 300px;

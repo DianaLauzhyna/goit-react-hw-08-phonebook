@@ -11,7 +11,6 @@ import {
   getFilter,
 } from 'redux/contacts/contactsSelectors';
 import { getAuth } from 'redux/auth/selectorsAuth';
-import cool from '../assets/backgroundImage.jpg';
 
 import {
   fetchTasks,
@@ -21,6 +20,8 @@ import {
 } from 'redux/contacts/contactsThunk';
 import { Loader } from 'components/UI/Loader/Loader';
 import { editContact, findByName } from 'redux/contacts/contactsSlice';
+
+import {TitleDiv, MainStyle, DivIsAuth} from './Home.styled'
 
 const HomePage = () => {
   const editedContact = useSelector(getEditedContact);
@@ -61,19 +62,11 @@ const HomePage = () => {
     dispatch(editContact(contact));
   };
   return (
-    <main
-      style={{
-        backgroundImage: `url(${cool})`,
-        backgroundSize: 'cover',
-        height: '100%',
-      }}
+    <MainStyle
     >
       {isAuth && (
-        <div
-          style={{
-            display: `flex`,
-            padding: '100px',
-          }}
+        <DivIsAuth
+
         >
           <Section title="PhoneBook">
             <PhoneBookForm onInputContact={onInputContact} />
@@ -84,17 +77,10 @@ const HomePage = () => {
               nameSearch="Find contacts by name"
               onSearchName={findByNameFilter}
             />
-            <div
-              style={{
-                width: 'fit-content',
-                margin: ' 0 auto',
-                position: 'absolute',
-                top: '10px',
-                right: '10px',
-              }}
+            <TitleDiv
             >
               {isLoading && <Loader />}
-            </div>
+            </TitleDiv>
             <p>{error}</p>
             <ContactsList
               onClickDelete={onClickDelete}
@@ -102,9 +88,9 @@ const HomePage = () => {
               contacts={filter === '' ? contacts : filter}
             />
           </Section>
-        </div>
+        </DivIsAuth>
       )}
-    </main>
+    </MainStyle>
   );
 };
 

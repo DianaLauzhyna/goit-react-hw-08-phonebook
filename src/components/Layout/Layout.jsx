@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 
 import { Navigation } from 'components/Navigation/Navigation';
 
-import {Main} from '../../pages/MainBox';
+import {Main} from '../../pages/MainBox/MainBox';
 
 const Layout = () => {
   const location = useLocation();

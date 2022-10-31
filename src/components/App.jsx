@@ -8,9 +8,9 @@ import PrivateRoute from './PrivateRoute/PrivateRoute';
 import RestrictedRoute from './RestrictedRoute/RestrictedRoute';
 import Layout from './Layout/Layout';
 
-const SignInSide = lazy(() => import('../pages/Auth'));
+const SignInSide = lazy(() => import('../pages/Auth/Auth'));
 const SignUp = lazy(() => import('./SignUp/SignUp'));
-const HomePage = lazy(() => import('pages/Home'));
+const HomePage = lazy(() => import('pages/Home/Home'));
 
 export const App = () => {
   const dispatch = useDispatch();
